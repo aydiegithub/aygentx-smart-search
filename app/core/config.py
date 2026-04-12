@@ -11,12 +11,26 @@ from app.constants import (CLOUDFLARE_ACCOUNT_ID,
                            GEMINI_MODEL,
                            OPENAI_MODEL,
                            OPENAI_PROVIDER,
-                           GEMINI_PROVIDER)
+                           GEMINI_PROVIDER,
+                           TITLE,
+                           DESCRIPTION,
+                           VERSION,
+                           APP_ENV,
+                           ROUTING_PROMPT_TEMPLATE,
+                           SYNTHESIS_PROMPT_TEMPLATE)
+
+
+from typing import Optional
+from app.core.logging import Logger
+logger = Logger(__name__)
 
 
 class Settings(BaseSettings):
     project_name: str = TITLE
+    project_description: str = DESCRIPTION
+    project_version: str = VERSION
     api_secret_key: str = "default-dev-key"
+    development_env: str = APP_ENV
 
     # Cloudflare D1 Credentials
     cloudflare_account_id: str = CLOUDFLARE_ACCOUNT_ID
@@ -26,21 +40,27 @@ class Settings(BaseSettings):
 
     #  LLM Credentials
     gemini_api_key: str = GEMINI_API_KEY
-    gemini_base_url: str = GEMINI_BASE_URL
+    gemini_base_url: Optional[str] = GEMINI_BASE_URL
     gemini_model: str = GEMINI_MODEL
     gemini_provider: str = GEMINI_PROVIDER
 
-    openai_api_key: str = OPENAI_API_KEY  # optional if switching later
-    openai_model: str = OPENAI_MODEL  # optional if switching later
-    openai_provider: str = OPENAI_PROVIDER  # optional if switching later
+    # optional if switching later
+    openai_api_key: Optional[str] = OPENAI_API_KEY
+    openai_model: Optional[str] = OPENAI_MODEL  # optional if switching later
+    # optional if switching later
+    openai_provider: Optional[str] = OPENAI_PROVIDER
 
     model_config = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8", extra="ignore"
     )
 
+    routing_prompt: str = ROUTING_PROMPT_TEMPLATE
+    synthesis_prompt_template: str = SYNTHESIS_PROMPT_TEMPLATE
+
 
 @lru_cache
 def get_settings() -> Settings:
+    logger.info(f"Entered get_settings")
     """ 
     Create a cached instance of the settings so we don't re-read the .env file every time we need a variable.
     """

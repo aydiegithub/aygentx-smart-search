@@ -12,7 +12,6 @@ class LLMFactory:
     def create(provider: str = settings.gemini_provider, model: str = settings.gemini_model) -> BaseLLM:
         logger.info(
             f"Entered create of LLMFactory with provider={provider}, model={model}")
-        logger.info(f"Entering create")
         if provider == "openai":
             return OpenAILLM(
                 api_key=settings.openai_api_key,

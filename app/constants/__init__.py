@@ -1,5 +1,5 @@
-from app.utils import read_yaml
 import os
+import yaml
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -21,21 +21,28 @@ GEMINI_PROVIDER: str = "gemini"
 OPENAI_PROVIDER: str = "openai"
 
 GEMINI_BASE_URL: str = "https://generativelanguage.googleapis.com/v1beta/openai/"
-CLOUDFLARE_BASE_URL: str = ["https://api.cloudflare.com/client/v4/accounts/", "/d1/database/",
-                            "/query"]
-# "https://api.cloudflare.com/client/v4/accounts/{self.account_id}/d1/database/{self.database_id}/query"
+CLOUDFLARE_BASE_URL: str = "https://api.cloudflare.com/client/v4/accounts/{account_id}/d1/database/{database_id}/query"
 
 SCHEMA_PATH: str = "app/models/schema.yml"
 
-schema_data = read_yaml(SCHEMA_PATH)
+with open(SCHEMA_PATH, "r") as f:
+    schema_data = yaml.safe_load(f)
 
 PREDEFINED_QUERIES: dict = schema_data.get("queries", {})
 TABLE_COLUMNS = {}
 for table_name, table_data in schema_data.get("tables", {}).items():
     TABLE_COLUMNS[table_name] = set(table_data.get("columns", {}).keys())
 
+PROMPTS_PATH: str = "app/prompts/prompts.yaml"
+with open(PROMPTS_PATH, "r", encoding="utf-8") as file:
+    _prompts = yaml.safe_load(file)
 
-TITLE: str = "AygentX Smart Search",
+# Export the prompts
+ROUTING_PROMPT_TEMPLATE = _prompts.get("routing_prompt", "")
+SYNTHESIS_PROMPT_TEMPLATE = _prompts.get("synthesis_prompt", "")
+
+
+TITLE: str = "AygentX Smart Search"
 DESCRIPTION: str = (
     "AygentX Smart Search is a custom MCP-powered AI agent built for Aydie's Avenue. "
     "It intelligently retrieves and responds to any query related to the brand, its ecosystem, "
@@ -43,5 +50,5 @@ DESCRIPTION: str = (
     "From structured information to deep contextual insights, the system is designed to handle "
     "everything—from standard lookups to unconventional, complex, and exploratory queries—"
     "delivering precise, meaningful, and dynamic responses in real time."
-),
+)
 VERSION: str = "1.0.0-beta.1"

@@ -11,7 +11,6 @@ class OpenAILLM(BaseLLM):
     def __init__(self, api_key: str, model_name: str, base_url: str = None):
         logger.info(
             f"Entered __init__ of OpenAILLM with api_key=***REDACTED***, model_name={model_name}, base_url={base_url}")
-        logger.info(f"Entering __init__")
         self.client = OpenAI(
             api_key=api_key,
             base_url=base_url
@@ -19,6 +18,7 @@ class OpenAILLM(BaseLLM):
         self.model_name = model_name
 
     def generate(self, messages: List[ChatMessage]) -> str:
+        logger.info(f"Entered generate of OpenAILLM with messages={messages}")
         logger.info(f"Entered generate of OpenAILLM with messages={messages}")
         logger.info(f"Entering generate")
         formatted_messages = [
@@ -31,6 +31,8 @@ class OpenAILLM(BaseLLM):
         return response.choices[0].message.content
 
     def generate_json(self, messages: List[ChatMessage]) -> Dict[str, Any]:
+        logger.info(
+            f"Entered generate_json of OpenAILLM with messages={messages}")
         logger.info(
             f"Entered generate_json of OpenAILLM with messages={messages}")
         logger.info(f"Entering generate_json")

@@ -6,6 +6,9 @@ from app.constants import (SCHEMA_PATH,
                            TABLE_COLUMNS)
 
 from app.db.connection import D1Connection
+from app.core.logging import Logger
+
+logger = Logger(__name__)
 
 # Initializing the MCP Server
 mcp = FastMCP("DataRouterAgent")
@@ -43,9 +46,12 @@ def query_cloudflare_d1(
     params: Optional[list] = None  # <--- Change 'str' to 'list' here!
 ) -> str:
     """Queries the Cloudflare D1 database using strict templates."""
+    logger.info(
+        f"Entered query_cloudflare_d1 with template_name={template_name}, table_name={table_name}, columns={columns}, search_column={search_column}, params={params}")
 
     # 1. Validate Table Exists
     if table_name not in TABLE_COLUMNS:
+        logger.error(f"Unauthorized or unknown table: {table_name}")
         return json.dumps({"error": f"Unauthorized or unknown table: {table_name}"})
 
     # Get the valid columns for THIS specific table
@@ -54,16 +60,21 @@ def query_cloudflare_d1(
     # Validate requested columns belong to this table
     for col in columns:
         if col not in valid_columns_for_table:
+            logger.error(
+                f"Column '{col}' does not exist in table '{table_name}'")
             return json.dumps({
                 "error": f"Column '{col}' does not exist in table '{table_name}'"
             })
 
     # Validate template exists
     if template_name not in PREDEFINED_QUERIES:
+        logger.error(f"Unknown template: {template_name}")
         return json.dumps({"error": f"Unknown template: {template_name}"})
 
     # Validate search column belongs to this table
     if search_column and search_column not in valid_columns_for_table:
+        logger.error(
+            f"Search column '{search_column}' does not exist in table '{table_name}'")
         return json.dumps({"error": f"Search column '{search_column}' does not exist in table '{table_name}'"})
 
     # Construct Query
@@ -76,18 +87,24 @@ def query_cloudflare_d1(
         table=table_name,
         search_column=search_column or "id"
     )
+    logger.info(f"Executing formatted SQL: {final_sql}")
 
     try:
         db = D1Connection()
         results = db.query(final_sql, params=params or [])
+        logger.info(
+            f"Query execution successful, retrieved {len(results) if isinstance(results, list) else 0} results")
         return json.dumps({"status": "success", "data": results})
     except Exception as e:
+        logger.error(f"Error querying D1 Database: {str(e)}", exc_info=True)
         return json.dumps({"error": str(e)})
 
 
 @mcp.tool()
 def search_vectorless_rag(search_query: str) -> str:
     """Searches the local knowledge base using keyword matching."""
+    logger.info(
+        f"Entered search_vectorless_rag with search_query='{search_query}'")
     mock_results = [{"file": "policy.txt",
                      "snippet": f"Here is info about {search_query}..."}]
     return json.dumps({"status": "success", "data": mock_results})

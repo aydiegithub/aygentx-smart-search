@@ -24,6 +24,6 @@ import uvicorn
 from app.api.server import app
 
 if __name__ == "__main__":
-    print("Starting AygentX Smart Search MCP-FastAPI Server...")
+    print("Starting AygentX FastAPI Server...")
     # Run the FastAPI app on port 8000
     uvicorn.run("app.api.server:app", host="0.0.0.0", port=8000, reload=True)

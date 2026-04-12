@@ -12,6 +12,7 @@ logging = Logger()
 class D1Connection:
     def __init__(self):
         logger.info(f"Entered __init__ of D1Connection")
+        logger.info(f"Entered __init__ of D1Connection")
         self.account_id = settings.cloudflare_account_id
         self.database_id = settings.cloudflare_database_id
         self.api_token = settings.cloudflare_api_token
@@ -20,15 +21,15 @@ class D1Connection:
             logging.error(
                 "Missing required Cloudflare D1 environment variables.")
 
-        self.base_url = settings.cloudflare_base_url[0] + self.account_id + \
-            settings.cloudflare_base_url[1] + \
-            self.database_id + settings.cloudflare_base_url[2]
+        self.base_url = settings.cloudflare_base_url.format(
+            account_id=self.account_id, database_id=self.database_id)
         self.headers = {
             "Authorization": f"Bearer {self.api_token}",
             "Content-Type": "application/json"
         }
 
     def query(self, sql: str, params: Optional[List[Any]] = None) -> List[Dict[str, Any]]:
+        logger.info(f"Entered query of D1Connection with sql={sql}, params={params}")
         logger.info(
             f"Entered query of D1Connection with sql={sql}, params={params}")
         """

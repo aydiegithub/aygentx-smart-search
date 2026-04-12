@@ -1,19 +1,22 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.endpoints import router as agent_router
-from app.constants import TITLE, DESCRIPTION, VERSION, APP_ENV
+from app.core.config import settings
+from app.core.logging import Logger
+logger = Logger(__name__)
 
 
 def create_app() -> FastAPI:
+    logger.info(f"Entered create_app")
     app = FastAPI(
-        title=TITLE,
-        description=DESCRIPTION,
-        version=VERSION
+        title=settings.project_name,
+        description=settings.project_description,
+        version=settings.project_version
     )
 
     allowed_origins = ["*"]
-    if APP_ENV == "prod":
-        allowed_origins = ["https://aydie.com", ["https://www.aydie.com"]]
+    if settings.development_env == "prod":
+        allowed_origins = ["https://aydie.com", "https://www.aydie.com"]
 
     app.add_middleware(
         CORSMiddleware,
@@ -27,6 +30,7 @@ def create_app() -> FastAPI:
 
     @app.get("/health")
     def health_check():
+        logger.info(f"Entered health_check")
         return {"status": "healthy", "agent": "AygentX is awake!"}
 
     return app
