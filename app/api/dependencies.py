@@ -1,7 +1,5 @@
-import os
+from app.core.config import settings
 from fastapi import Header, HTTPException, status
-
-EXPECTED_API_KEY = "abcd-1234"
 
 
 def verify_api_key(x_api_key: str = Header(default=None)):
@@ -14,7 +12,7 @@ def verify_api_key(x_api_key: str = Header(default=None)):
             detail="API Key header (x-api-key) is missing"
         )
 
-    if x_api_key != EXPECTED_API_KEY:
+    if x_api_key != settings.api_secret_key:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Invalid API Key"

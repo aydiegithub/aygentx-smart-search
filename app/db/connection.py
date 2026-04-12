@@ -1,10 +1,7 @@
 import os
 import requests
 from typing import List, Dict, Any, Optional
-from app.constants import (CLOUDFLARE_ACCOUNT_ID,
-                           CLOUDFLARE_DATABASE_ID,
-                           CLOUDFLARE_API_TOEKN,
-                           CLOUDFLARE_BASE_URL)
+from app.core.config import settings
 from app.core.logging import Logger
 from app.core.logging import Logger
 logger = Logger(__name__)
@@ -15,27 +12,30 @@ logging = Logger()
 class D1Connection:
     def __init__(self):
         logger.info(f"Entered __init__ of D1Connection")
-        self.account_id = CLOUDFLARE_ACCOUNT_ID
-        self.database_id = CLOUDFLARE_DATABASE_ID
-        self.api_token = CLOUDFLARE_API_TOEKN
+        self.account_id = settings.cloudflare_account_id
+        self.database_id = settings.cloudflare_database_id
+        self.api_token = settings.cloudflare_api_token
 
         if not all([self.account_id, self.database_id, self.api_token]):
             logging.error(
                 "Missing required Cloudflare D1 environment variables.")
 
-        self.base_url = CLOUDFLARE_BASE_URL[0] + self.account_id + \
-            CLOUDFLARE_BASE_URL[1] + self.database_id + CLOUDFLARE_BASE_URL[2]
+        self.base_url = settings.cloudflare_base_url[0] + self.account_id + \
+            settings.cloudflare_base_url[1] + \
+            self.database_id + settings.cloudflare_base_url[2]
         self.headers = {
             "Authorization": f"Bearer {self.api_token}",
             "Content-Type": "application/json"
         }
 
     def query(self, sql: str, params: Optional[List[Any]] = None) -> List[Dict[str, Any]]:
-        logger.info(f"Entered query of D1Connection with sql={sql}, params={params}")
+        logger.info(
+            f"Entered query of D1Connection with sql={sql}, params={params}")
         """
         Execute SQL Query
         """
-        logger.info(f"Entered query of D1Connection with sql={sql}, params={params}")
+        logger.info(
+            f"Entered query of D1Connection with sql={sql}, params={params}")
         payload = {
             "sql": sql,
             "params": params or []
