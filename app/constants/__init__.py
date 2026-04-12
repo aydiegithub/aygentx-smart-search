@@ -4,6 +4,17 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+TITLE: str = "AygentX Smart Search"
+DESCRIPTION: str = (
+    "AygentX Smart Search is a custom MCP-powered AI agent built for Aydie's Avenue. "
+    "It intelligently retrieves and responds to any query related to the brand, its ecosystem, "
+    "and the journey of its founder, Aditya Dinesh K. "
+    "From structured information to deep contextual insights, the system is designed to handle "
+    "everything—from standard lookups to unconventional, complex, and exploratory queries—"
+    "delivering precise, meaningful, and dynamic responses in real time."
+)
+VERSION: str = "1.0.0-beta.1"
+
 # "local" writes logs to a file, "prod" logs only to console to avoid AWS SAM errors
 APP_ENV: str = "local"  # "prod"
 
@@ -41,14 +52,4 @@ with open(PROMPTS_PATH, "r", encoding="utf-8") as file:
 ROUTING_PROMPT_TEMPLATE = _prompts.get("routing_prompt", "")
 SYNTHESIS_PROMPT_TEMPLATE = _prompts.get("synthesis_prompt", "")
 
-
-TITLE: str = "AygentX Smart Search"
-DESCRIPTION: str = (
-    "AygentX Smart Search is a custom MCP-powered AI agent built for Aydie's Avenue. "
-    "It intelligently retrieves and responds to any query related to the brand, its ecosystem, "
-    "and the journey of its founder, Aditya Dinesh K. "
-    "From structured information to deep contextual insights, the system is designed to handle "
-    "everything—from standard lookups to unconventional, complex, and exploratory queries—"
-    "delivering precise, meaningful, and dynamic responses in real time."
-)
-VERSION: str = "1.0.0-beta.1"
+MAX_HISTORY: int = 15

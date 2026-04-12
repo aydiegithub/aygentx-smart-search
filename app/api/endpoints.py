@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from app.api.dependencies import verify_api_key
 from app.models.pydantic.schemas import QueryRequest, QueryResponse
 from app.services.query_service import QueryService
@@ -35,16 +35,32 @@ async def ask_agent(request: QueryRequest):
 
     urls = request.supporting_url if request.supporting_url_exist else []
 
-    result = query_service.process_query(
-        user_text=user_message,
-        model_name=request.model,
-        urls=urls
-    )
+    try:
+        result = query_service.process_query(
+            user_text=user_message,
+            model_name=request.model,
+            session_id=request.session_id,
+            urls=urls
+        )
 
-    return QueryResponse(
-        ai_response=result.get(
-            "ai_response", "Processed successfully."),
-        data=result.get('data', []),
-        assistant_voice_memo=False,  # Set to True later when Gemini Voice is integrated TODO
-        assistant_voice_file=None
-    )
+        if not isinstance(result, dict):
+            logger.error("Invalid response from query_service")
+            raise HTTPException(
+                status_code=500,
+                detail="Internal processing error"
+            )
+
+        return QueryResponse(
+            ai_response=result.get("ai_response", "Processed successfully."),
+            suggested_links=result.get("suggested_links", []),
+            data=result.get("data", []),
+            assistant_voice_memo=False,
+            assistant_voice_file=None
+        )
+
+    except Exception as e:
+        logger.error(f"Error in /query endpoint: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail="Something went wrong"
+        )
