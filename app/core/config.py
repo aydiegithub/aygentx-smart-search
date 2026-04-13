@@ -17,7 +17,8 @@ from app.constants import (CLOUDFLARE_ACCOUNT_ID,
                            VERSION,
                            APP_ENV,
                            ROUTING_PROMPT_TEMPLATE,
-                           SYNTHESIS_PROMPT_TEMPLATE)
+                           SYNTHESIS_PROMPT_TEMPLATE,
+                           DOWNLOAD_FILE_NAME)
 
 
 from typing import Optional
@@ -56,6 +57,8 @@ class Settings(BaseSettings):
 
     routing_prompt: str = ROUTING_PROMPT_TEMPLATE
     synthesis_prompt_template: str = SYNTHESIS_PROMPT_TEMPLATE
+
+    download_file_name: str = DOWNLOAD_FILE_NAME
 
 
 @lru_cache

@@ -27,7 +27,10 @@ CLOUDFLARE_ACCOUNT_ID: str = os.getenv("CLOUDFLARE_ACCOUNT_ID")
 CLOUDFLARE_API_TOEKN: str = os.getenv("CLOUDFLARE_API_TOEKN")
 
 GEMINI_MODEL: str = "gemini-3.1-flash-lite-preview"
+RAG_REASONING_MODEL: str = "gemini-2.5-pro"
+
 OPENAI_MODEL: str = "gpt-4o-mini"
+
 GEMINI_PROVIDER: str = "gemini"
 OPENAI_PROVIDER: str = "openai"
 
@@ -51,5 +54,8 @@ with open(PROMPTS_PATH, "r", encoding="utf-8") as file:
 # Export the prompts
 ROUTING_PROMPT_TEMPLATE = _prompts.get("routing_prompt", "")
 SYNTHESIS_PROMPT_TEMPLATE = _prompts.get("synthesis_prompt", "")
+RAG_INNGESTION_PROMPT = _prompts.get("rag_ingestion_prompt")
+
+DOWNLOAD_FILE_NAME: str = "-knowledge_backup.json"
 
 MAX_HISTORY: int = 15

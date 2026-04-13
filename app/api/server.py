@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.endpoints import router as agent_router
 from app.core.config import settings
 from app.core.logging import Logger
+from app.api.rag_endpoints import router as rag_router
+
 logger = Logger(__name__)
 
 
@@ -27,6 +29,7 @@ def create_app() -> FastAPI:
     )
 
     app.include_router(agent_router, prefix="/api/v1")
+    app.include_router(rag_router, prefix="/api/v1")
 
     @app.get("/health")
     def health_check():

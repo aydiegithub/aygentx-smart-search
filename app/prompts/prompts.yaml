@@ -205,3 +205,35 @@ synthesis_prompt: |
           {{"title": "Live Demo", "url": "https://..."}}
       ]
   }}
+
+
+rag_ingestion_prompt: |
+  You are an expert Librarian AI for Adithya (Aydie).
+  Your task is to read the massive text below, understand the core themes of his life/career, and organize it into a Hierarchical JSON Tree.
+  
+  RULES:
+  1. Create main branches (e.g., "Personal Experience", "Music Career", "Tech Journey").
+  2. Create sub-branches (leaf nodes) under the main branches.
+  3. ONLY the leaf nodes should contain the actual extracted `content`. Parent branches should have `content: null`.
+  4. Ensure ALL details from the raw text are mapped to a relevant leaf node. Do not lose any information.
+  5. Use snake_case for IDs (e.g., "music_career", "stage_name_history").
+  
+  OUTPUT STRICTLY IN THIS JSON FORMAT:
+  [
+    {{
+      "id": "personal_experience",
+      "title": "Personal Experience",
+      "content": null,
+      "children": [
+        {{
+          "id": "childhood",
+          "title": "Childhood",
+          "content": "Adithya grew up in...",
+          "children": []
+        }}
+      ]
+    }}
+  ]
+  
+  RAW TEXT TO PROCESS:
+  {raw_text}
