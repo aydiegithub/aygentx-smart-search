@@ -237,3 +237,20 @@ rag_ingestion_prompt: |
   
   RAW TEXT TO PROCESS:
   {raw_text}
+
+rag_node_selection_prompt: |
+  You are an intelligent search router for Adithya (Aydie).
+  The user asked: "{user_query}"
+  
+  Below is the "Table of Contents" of Adithya's personal knowledge base. 
+  Review the titles and structure. Identify the single best `id` that likely contains the answer.
+  - If multiple nodes match, pick the most specific LEAF node (the deepest one).
+  - If no node seems relevant, return "none".
+  
+  TABLE OF CONTENTS:
+  {table_of_contents}
+  
+  OUTPUT STRICTLY IN THIS JSON FORMAT:
+  {{
+      "selected_node_id": "the_id_here"
+  }}

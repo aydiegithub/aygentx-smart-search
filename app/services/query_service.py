@@ -1,6 +1,6 @@
 import json
 from app.agent.router import AgentRouter
-from app.api.mcp_server import query_cloudflare_d1
+from app.api.mcp_server import query_cloudflare_d1, search_vectorless_rag
 from app.core.logging import Logger
 from app.llm.factory import LLMFactory
 from app.llm.base import ChatMessage
@@ -78,7 +78,21 @@ class QueryService:
 
         elif tool_name == "search_vectorless_rag":
             logging.info(f"Successfully routed to parked tool [{tool_name}]")
-            return self._build_rejection("This question requires searching documents, but my document search feature is currently parked.", [])
+
+            # Extract the generated query from router's kwargs
+            search_query = kwargs.get("query", user_text)
+
+            # Execute the new function we just wrote
+            raw_tool_response = search_vectorless_rag(query=search_query)
+            parsed_response = json.loads(raw_tool_response)
+
+            if parsed_response.get("error"):
+                logging.error(f"Error using tool [{tool_name}]")
+                return self._build_rejection(parsed_response['error'], [])
+
+            raw_data = parsed_response.get("data", [])
+            logging.info(
+                f"Successfully fetched {len(raw_data)} chunks using tool [{tool_name}]")
 
         else:
             logging.error("Error deciding the tool.")

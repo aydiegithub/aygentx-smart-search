@@ -34,9 +34,9 @@ class RagService:
                 "SELECT content FROM rag_raw_documents", [])
 
             old_text = ""
-            if isinstance(existing_docs, dict) and existing_docs.get("data"):
-                old_text = "\n\n".join([doc["content"]
-                                       for doc in existing_docs['data']])
+            if isinstance(existing_docs, list) and existing_docs:
+                old_text = "\n\n".join([doc.get("content", "")
+                                       for doc in existing_docs])
 
             text_to_process = old_text + "\n\n" + content
 
@@ -126,8 +126,7 @@ class RagService:
 
     def get_indices(self) -> dict:
         """Fetches all nodes and reconstructs the hierarchical tree."""
-        response = self.db.query("SELECT * FROM rag_nodes", [])
-        nodes = response.get("data", []) if isinstance(response, dict) else []
+        nodes = self.db.query("SELECT * FROM rag_nodes", [])
 
         # Build the tree in memory
         node_map = {node["id"]: {**node, "children": []} for node in nodes}
@@ -144,5 +143,4 @@ class RagService:
 
     def get_raw_documents(self) -> List[dict]:
         """Fetches all raw documents for backup/download."""
-        response = self.db.query("SELECT * FROM rag_raw_documents", [])
-        return response.get("data", []) if isinstance(response, dict) else []
+        return self.db.query("SELECT * FROM rag_raw_documents", [])

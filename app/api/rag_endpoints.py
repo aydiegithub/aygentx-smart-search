@@ -64,7 +64,7 @@ async def get_indices():
                             })
 
 
-@router.get("/download", response_class=Response, dependencies=[Depends(verify_api_key)])
+@router.get("/download", dependencies=[Depends(verify_api_key)])
 async def download_backup(file: bool = Query(False, description="Set to true to download as a file")):
     try:
         raw_docs = rag_service.get_raw_documents()

@@ -55,6 +55,7 @@ with open(PROMPTS_PATH, "r", encoding="utf-8") as file:
 ROUTING_PROMPT_TEMPLATE = _prompts.get("routing_prompt", "")
 SYNTHESIS_PROMPT_TEMPLATE = _prompts.get("synthesis_prompt", "")
 RAG_INNGESTION_PROMPT = _prompts.get("rag_ingestion_prompt")
+RAG_NODE_SELECTION_PROMPT = _prompts.get("rag_node_selection_prompt")
 
 DOWNLOAD_FILE_NAME: str = "-knowledge_backup.json"
 
