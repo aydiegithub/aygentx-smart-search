@@ -1,0 +1,107 @@
+queries:
+  get_all: "SELECT {columns} FROM {table} LIMIT 100;"
+  filter_by_status: "SELECT {columns} FROM {table} WHERE status = ? LIMIT 100;"
+  search_like: "SELECT {columns} FROM {table} WHERE {search_column} LIKE '%' || ? || '%' LIMIT 100;"
+
+tables:
+  projects:
+    description: Portfolio projects
+    columns:
+      id: { type: TEXT, primary_key: true }
+      title: { type: TEXT, not_null: true }
+      category: { type: TEXT, default: tech }
+      description: { type: TEXT, default: "" }
+      content: { type: TEXT, default: "" }
+      technologies: { type: TEXT, default: "[]" }
+      demo_url: { type: TEXT, default: "" }
+      github_url: { type: TEXT, default: "" }
+      links: { type: TEXT, default: "[]" }
+
+  creative_projects:
+    description: Creative/video projects
+    columns:
+      id: { type: TEXT, primary_key: true }
+      title: { type: TEXT, not_null: true }
+      description: { type: TEXT, default: "" }
+      link: { type: TEXT, default: "" }
+      category: { type: TEXT, default: video }
+
+  music_tracks:
+    description: Music catalog
+    columns:
+      id: { type: TEXT, primary_key: true }
+      title: { type: TEXT, not_null: true }
+      slug: { type: TEXT, default: "" }
+      artist: { type: TEXT, default: "Aydie Bantai" }
+      album: { type: TEXT, default: "" }
+      genre: { type: TEXT, default: "" }
+      lyrics: { type: TEXT, default: "" }
+      release_date: { type: TEXT, default: "" }
+      duration: { type: TEXT, default: "" }
+      spotify_url: { type: TEXT, default: "" }
+      apple_music_url: { type: TEXT, default: "" }
+      youtube_url: { type: TEXT, default: "" }
+      other_url: { type: TEXT, default: "" }
+      release_type:
+        type: TEXT
+        default: single
+        enum: [single, album, ep]
+      parent_id: { type: TEXT, default: "" }
+      track_number: { type: INTEGER, default: 0 }
+
+  opensource_projects:
+    description: Open source work
+    columns:
+      id: { type: TEXT, primary_key: true }
+      title: { type: TEXT, not_null: true }
+      description: { type: TEXT, default: "" }
+      long_description: { type: TEXT, default: "" }
+      github_url: { type: TEXT, default: "" }
+      demo_url: { type: TEXT, default: "" }
+      tags: { type: TEXT, default: "[]" }
+      language: { type: TEXT, default: "" }
+
+  research_papers:
+    description: Research publications
+    columns:
+      id: { type: TEXT, primary_key: true }
+      title: { type: TEXT, not_null: true }
+      abstract: { type: TEXT, default: "" }
+      authors: { type: TEXT, default: "" }
+      venue: { type: TEXT, default: "" }
+      publication_date: { type: TEXT, default: "" }
+      pdf_url: { type: TEXT, default: "" }
+      external_url: { type: TEXT, default: "" }
+      keywords: { type: TEXT, default: "[]" }
+
+  blogs:
+    description: Blog posts
+    columns:
+      id: { type: TEXT, primary_key: true }
+      title: { type: TEXT, not_null: true }
+      slug: { type: TEXT, not_null: true, unique: true }
+      content: { type: TEXT, default: "" }
+      excerpt: { type: TEXT, default: "" }
+      author: { type: TEXT, default: "Aditya" }
+      tags: { type: TEXT, default: "[]" }
+      categories: { type: TEXT, default: "[]" }
+      published_at: { type: DATETIME }
+
+  services:
+    description: Services offered
+    columns:
+      id: { type: TEXT, primary_key: true }
+      title: { type: TEXT, not_null: true }
+      pricing: { type: TEXT, default: "" }
+      description: { type: TEXT, default: "" }
+      plans: { type: TEXT, default: "[]" }
+
+  certificates:
+    description: Certifications
+    columns:
+      id: { type: TEXT, primary_key: true }
+      title: { type: TEXT, not_null: true }
+      description: { type: TEXT, default: "" }
+      issuer: { type: TEXT, default: "" }
+      issued_date: { type: TEXT, default: "" }
+      link: { type: TEXT, default: "" }
