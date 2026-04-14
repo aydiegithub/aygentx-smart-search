@@ -4,7 +4,7 @@ from app.constants import TITLE
 from app.constants import (API_SECRET_KEY,
                            CLOUDFLARE_ACCOUNT_ID,
                            CLOUDFLARE_DATABASE_ID,
-                           CLOUDFLARE_API_TOEKN,
+                           CLOUDFLARE_API_TOKEN,
                            CLOUDFLARE_BASE_URL,
                            GEMINI_API_KEY,
                            OPENAI_API_KEY,
@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     # Cloudflare D1 Credentials
     cloudflare_account_id: str = CLOUDFLARE_ACCOUNT_ID
     cloudflare_database_id: str = CLOUDFLARE_DATABASE_ID
-    cloudflare_api_token: str = CLOUDFLARE_API_TOEKN
+    cloudflare_api_token: str = CLOUDFLARE_API_TOKEN
     cloudflare_base_url: str = CLOUDFLARE_BASE_URL
 
     #  LLM Credentials

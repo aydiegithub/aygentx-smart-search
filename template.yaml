@@ -1,0 +1,75 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  AygentX Smart Search
+  SAM Template for AygentX FastAPI backend on AWS Lambda.
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 512
+    Runtime: python3.12
+    Architectures:
+      - x86_64
+    Environment:
+      Variables:
+        # Define the env variables here; values can be injected from deployment environment or GitHub Actions
+        API_SECRET_KEY: !Ref ApiSecretKey
+        GEMINI_API_KEY: !Ref GeminiApiKey
+        OPENAI_API_KEY: !Ref OpenaiApiKey
+        CLOUDFLARE_DATABASE_ID: !Ref CloudflareDatabaseId
+        CLOUDFLARE_ACCOUNT_ID: !Ref CloudflareAccountId
+        CLOUDFLARE_API_TOKEN: !Ref CloudflareApiToken
+        APP_ENV: "prod"
+
+Parameters:
+  ApiSecretKey:
+    Type: String
+    Description: Secret API Key for internal endpoints
+    Default: ""
+  GeminiApiKey:
+    Type: String
+    Description: API Token for Gemini
+    Default: ""
+  OpenaiApiKey:
+    Type: String
+    Description: API Token for OpenAI
+    Default: ""
+  CloudflareDatabaseId:
+    Type: String
+    Description: D1 DB ID
+    Default: ""
+  CloudflareAccountId:
+    Type: String
+    Description: CF Account
+    Default: ""
+  CloudflareApiToken:
+    Type: String
+    Description: CF Token
+    Default: ""
+
+Resources:
+  AygentXFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: main.handler
+      Events:
+        AygentXApi:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+        AygentXApiRoot:
+          Type: Api
+          Properties:
+            Path: /
+            Method: ANY
+
+Outputs:
+  AygentXApiEndpoint:
+    Description: "API Gateway endpoint URL for Prod stage"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  AygentXFunctionArn:
+    Description: "Lambda Function ARN"
+    Value: !GetAtt AygentXFunction.Arn

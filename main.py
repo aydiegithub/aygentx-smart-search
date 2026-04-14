@@ -23,6 +23,11 @@
 import uvicorn
 from app.api.server import app
 
+from mangum import Mangum
+
+# Lambda handler for AWS SAM / API Gateway integration
+handler = Mangum(app)
+
 if __name__ == "__main__":
     print("Starting AygentX FastAPI Server...")
     # Run the FastAPI app on port 8000

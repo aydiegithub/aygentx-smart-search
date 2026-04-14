@@ -24,9 +24,9 @@ OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY")
 
 CLOUDFLARE_DATABASE_ID: str = os.getenv("CLOUDFLARE_DATABASE_ID")
 CLOUDFLARE_ACCOUNT_ID: str = os.getenv("CLOUDFLARE_ACCOUNT_ID")
-CLOUDFLARE_API_TOEKN: str = os.getenv("CLOUDFLARE_API_TOEKN")
+CLOUDFLARE_API_TOKEN: str = os.getenv("CLOUDFLARE_API_TOKEN")
 
-API_SECRET_KEY: str = "default-dev-key"
+API_SECRET_KEY: str = os.getenv("API_SECRET_KEY")
 
 GEMINI_MODEL: str = "gemini-3.1-flash-lite-preview"
 GEMINI_LIVE_MODEL: str = "gemini-2.5-flash-native-audio-latest"
