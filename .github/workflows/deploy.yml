@@ -50,9 +50,9 @@ jobs:
             --resolve-s3 \
             --capabilities CAPABILITY_IAM \
             --parameter-overrides \
-                ApiSecretKey="${{ secrets.API_SECRET_KEY }}" \
-                GeminiApiKey="${{ secrets.GEMINI_API_KEY }}" \
-                OpenaiApiKey="${{ secrets.OPENAI_API_KEY }}" \
-                CloudflareDatabaseId="${{ secrets.CLOUDFLARE_DATABASE_ID }}" \
-                CloudflareAccountId="${{ secrets.CLOUDFLARE_ACCOUNT_ID }}" \
-                CloudflareApiToken="${{ secrets.CLOUDFLARE_API_TOKEN }}"
+                ApiSecretKey="${{ secrets.API_SECRET_KEY || 'NotSet' }}" \
+                GeminiApiKey="${{ secrets.GEMINI_API_KEY || 'NotSet' }}" \
+                OpenaiApiKey="${{ secrets.OPENAI_API_KEY || 'NotSet' }}" \
+                CloudflareDatabaseId="${{ secrets.CLOUDFLARE_DATABASE_ID || 'NotSet' }}" \
+                CloudflareAccountId="${{ secrets.CLOUDFLARE_ACCOUNT_ID || 'NotSet' }}" \
+                CloudflareApiToken="${{ secrets.CLOUDFLARE_API_TOKEN || 'NotSet' }}"
