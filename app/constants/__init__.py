@@ -2,6 +2,8 @@ import os
 import yaml
 from dotenv import load_dotenv
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 load_dotenv()
 
 TITLE: str = "AygentX Smart Search"
@@ -40,7 +42,7 @@ OPENAI_PROVIDER: str = "openai"
 GEMINI_BASE_URL: str = "https://generativelanguage.googleapis.com/v1beta/openai/"
 CLOUDFLARE_BASE_URL: str = "https://api.cloudflare.com/client/v4/accounts/{account_id}/d1/database/{database_id}/query"
 
-SCHEMA_PATH: str = "app/models/schema.yml"
+SCHEMA_PATH: str = os.path.join(BASE_DIR, "app", "models", "schema.yml")
 
 with open(SCHEMA_PATH, "r") as f:
     schema_data = yaml.safe_load(f)
@@ -50,7 +52,7 @@ TABLE_COLUMNS = {}
 for table_name, table_data in schema_data.get("tables", {}).items():
     TABLE_COLUMNS[table_name] = set(table_data.get("columns", {}).keys())
 
-PROMPTS_PATH: str = "app/prompts/prompts.yaml"
+PROMPTS_PATH: str = os.path.join(BASE_DIR, "app", "prompts", "prompts.yaml")
 with open(PROMPTS_PATH, "r", encoding="utf-8") as file:
     _prompts = yaml.safe_load(file)
 
