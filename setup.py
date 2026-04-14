@@ -5,6 +5,10 @@ setup(
     version="0.1.0",
     description="AI-powered MCP server routing between SQL and Vectorless RAG using OpenRouter and Cloudflare D1",
     packages=find_packages(include=["app", "app.*"]),
+    include_package_data=True,
+    package_data={
+        "app": ["models/*.yml", "prompts/*.yaml"],
+    },
     install_requires=[
         "fastapi",
         "uvicorn",
