@@ -81,8 +81,9 @@ This is the primary endpoint for text-based chat. Send a user query, and the bac
 **Request:** `POST /api/v1/query`
 ```json
 {
-  "query": "Tell me about Aydie's latest music release.",
-  "model": "gemini-3.1-flash-lite-preview"
+  "user_message": "Tell me about Aydie's latest music release.",
+  "model": "gemini-3.1-flash-lite-preview",
+  "session_id": "001"
 }
 ```
 
@@ -187,8 +188,9 @@ HEADERS = {
 }
 
 payload = {
-    "query": "What projects has Aydie built?",
-    "model": "gemini-3.1-flash-lite-preview"
+    "user_message": "What projects has Aydie built?",
+    "model": "gemini-3.1-flash-lite-preview",
+    "session_id": "001"
 }
 
 response = requests.post(
@@ -222,8 +224,9 @@ export async function askAygentX(userQuery: string) {
         'x-api-key': process.env.AYGENTX_SECRET_KEY as string,
       },
       body: JSON.stringify({ 
-        query: userQuery,
-        model: "gemini-3.1-flash-lite-preview" 
+        user_message: userQuery,
+        model: "gemini-3.1-flash-lite-preview",
+        session_id: "001"
       }),
     });
 
