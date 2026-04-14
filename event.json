@@ -1,0 +1,9 @@
+{
+  "resource": "/docs/",
+  "path": "/docs/",
+  "httpMethod": "GET",
+  "requestContext": {
+    "resourcePath": "/docs/",
+    "httpMethod": "GET"
+  }
+}
