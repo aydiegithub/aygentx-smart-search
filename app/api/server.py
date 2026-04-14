@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.endpoints import router as agent_router
+from app.api.voice_endpoints import router as voice_router
 from app.core.config import settings
 from app.core.logging import Logger
 from app.api.rag_endpoints import router as rag_router
@@ -30,6 +31,7 @@ def create_app() -> FastAPI:
 
     app.include_router(agent_router, prefix="/api/v1")
     app.include_router(rag_router, prefix="/api/v1")
+    app.include_router(voice_router, prefix="/api/v1")
 
     @app.get("/health")
     def health_check():

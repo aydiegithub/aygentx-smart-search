@@ -1,12 +1,13 @@
 [project]
-name = "aygentx-ai"
+name = "AygentX-Smart-Search"
 version = "0.1.0"
-description = "Add your description here"
+description = "AygentX Smart Search - It is a FastAPI-based AI backend that dynamically routes queries between SQL Retrieval and Agentic RAG to deliver precise, context-aware results. It supports real-time voice interaction and is deployed on AWS Lambda for scalable, serverless performance."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "colorama>=0.4.6",
     "fastapi>=0.135.3",
+    "google-genai>=1.73.0",
     "mcp>=1.27.0",
     "openai>=2.31.0",
     "pydantic>=2.12.5",

@@ -26,7 +26,10 @@ CLOUDFLARE_DATABASE_ID: str = os.getenv("CLOUDFLARE_DATABASE_ID")
 CLOUDFLARE_ACCOUNT_ID: str = os.getenv("CLOUDFLARE_ACCOUNT_ID")
 CLOUDFLARE_API_TOEKN: str = os.getenv("CLOUDFLARE_API_TOEKN")
 
+API_SECRET_KEY: str = "default-dev-key"
+
 GEMINI_MODEL: str = "gemini-3.1-flash-lite-preview"
+GEMINI_LIVE_MODEL: str = "gemini-2.5-flash-native-audio-latest"
 RAG_REASONING_MODEL: str = "gemini-2.5-pro"
 
 OPENAI_MODEL: str = "gpt-4o-mini"
@@ -56,7 +59,11 @@ ROUTING_PROMPT_TEMPLATE = _prompts.get("routing_prompt", "")
 SYNTHESIS_PROMPT_TEMPLATE = _prompts.get("synthesis_prompt", "")
 RAG_INNGESTION_PROMPT = _prompts.get("rag_ingestion_prompt")
 RAG_NODE_SELECTION_PROMPT = _prompts.get("rag_node_selection_prompt")
+VOICE_AGENT_PROMPT = _prompts.get("voice_agent_prompt")
 
 DOWNLOAD_FILE_NAME: str = "-knowledge_backup.json"
 
 MAX_HISTORY: int = 15
+
+# AUDIO
+MIME_TYPE: str = "audio/pcm;rate=16000"
