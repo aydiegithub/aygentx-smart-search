@@ -27,11 +27,22 @@ try:
     from app.api.server import app
     from mangum import Mangum
 
-    # Lambda handler for AWS SAM / API Gateway integration
-    handler = Mangum(app)
+    _orig_handler = Mangum(app)
+
+    def handler(event, context):
+        try:
+            return _orig_handler(event, context)
+        except Exception as runtime_err:
+            return {
+                "statusCode": 500,
+                "headers": {"Content-Type": "text/plain"},
+                "body": "Runtime Error:\n" + traceback.format_exc()
+            }
+
 except Exception as e:
     err = traceback.format_exc()
     print("LAMBDA INIT ERROR:", err)
+
     def handler(event, context):
         return {
             "statusCode": 500,
