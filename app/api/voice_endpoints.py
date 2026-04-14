@@ -71,8 +71,6 @@ async def voice_stream(websocket: WebSocket, api_key: str = Query(None)):
 
     try:
         # Model supporting live api
-        # Gemini 2.5 Flash Native Audio Dialog
-        # Gemini 3 Flash Live
         async with client.aio.live.connect(
             model=GEMINI_LIVE_MODEL,
             config=config
@@ -99,7 +97,6 @@ async def voice_stream(websocket: WebSocket, api_key: str = Query(None)):
             async def receive_from_gemini():
                 async for response in session.receive():
                     server_content = response.server_content
-                    # logging.info(f"Gemini response: {server_content}")
                     if server_content is not None and server_content.model_turn:
                         for part in server_content.model_turn.parts:
                             # If gemini sends audio, forward it to the client
@@ -119,7 +116,6 @@ async def voice_stream(websocket: WebSocket, api_key: str = Query(None)):
                             tool_result = ""
                             try:
                                 if tool_name == "query_cloudflare_d1":
-                                    # query_cloudflare_d1 in mcp_server requires multiple args, so this simple query might fail unless wrapped
                                     # Fallback temporarily if it fails or returns string
                                     tool_result = await asyncio.to_thread(query_cloudflare_d1, tool_args.get("query", ""), "knowledge_base", ["id"], None, None)
                                 elif tool_name == "search_vectorless_rag":
@@ -144,11 +140,18 @@ async def voice_stream(websocket: WebSocket, api_key: str = Query(None)):
                         # Send the database result back to Gemini so it can speak them
                         await session.send_tool_response(function_responses=function_responses)
 
-            # Inside the async with block, gather both tasks
-            await asyncio.gather(
-                receive_from_client(),
-                receive_from_gemini()
+            # SECURE CONCURRENCY FIX: Create tasks and wait for the first one to complete
+            client_task = asyncio.create_task(receive_from_client())
+            gemini_task = asyncio.create_task(receive_from_gemini())
+
+            done, pending = await asyncio.wait(
+                [client_task, gemini_task],
+                return_when=asyncio.FIRST_COMPLETED
             )
+
+            # Cancel any remaining background task to prevent memory leaks
+            for task in pending:
+                task.cancel()
 
     except Exception as e:
         logging.error(f"Voice Streaming Error: {e}")

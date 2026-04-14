@@ -795,7 +795,13 @@
             updateJSONPanelText('[Voice Session Closed]');
 
             if (scriptNode) scriptNode.disconnect();
-            if (microphone) microphone.disconnect();
+
+            if (microphone) {
+                microphone.disconnect();
+                // FIX: Turns off the actual hardware microphone light in the browser tab
+                microphone.mediaStream.getTracks().forEach(track => track.stop());
+            }
+
             if (audioContext) audioContext.close();
             if (ws) ws.close();
 
