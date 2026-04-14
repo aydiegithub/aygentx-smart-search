@@ -16,7 +16,7 @@ DESCRIPTION: str = (
 VERSION: str = "1.0.0-beta.1"
 
 # "local" writes logs to a file, "prod" logs only to console to avoid AWS SAM errors
-APP_ENV: str = "local"  # "prod"
+APP_ENV: str = "prod"  # "local"
 
 
 GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY")

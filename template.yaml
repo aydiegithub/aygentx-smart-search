@@ -20,7 +20,6 @@ Globals:
         CLOUDFLARE_DATABASE_ID: !Ref CloudflareDatabaseId
         CLOUDFLARE_ACCOUNT_ID: !Ref CloudflareAccountId
         CLOUDFLARE_API_TOKEN: !Ref CloudflareApiToken
-        APP_ENV: "prod"
 
 Parameters:
   ApiSecretKey:
