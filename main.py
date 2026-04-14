@@ -20,13 +20,24 @@
 # # main()
 
 
-import uvicorn
-from app.api.server import app
+import traceback
 
-from mangum import Mangum
+try:
+    import uvicorn
+    from app.api.server import app
+    from mangum import Mangum
 
-# Lambda handler for AWS SAM / API Gateway integration
-handler = Mangum(app)
+    # Lambda handler for AWS SAM / API Gateway integration
+    handler = Mangum(app)
+except Exception as e:
+    err = traceback.format_exc()
+    print("LAMBDA INIT ERROR:", err)
+    def handler(event, context):
+        return {
+            "statusCode": 500,
+            "headers": {"Content-Type": "text/plain"},
+            "body": "Initialization Error:\n" + err
+        }
 
 if __name__ == "__main__":
     print("Starting AygentX FastAPI Server...")
