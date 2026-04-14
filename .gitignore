@@ -105,7 +105,7 @@ logs/
 # =========================
 # MODEL FILES
 # =========================
-models/
+/models/
 *.pkl
 *.joblib
 *.onnx
