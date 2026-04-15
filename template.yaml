@@ -14,12 +14,12 @@ Globals:
     Environment:
       Variables:
         # Define the env variables here; values can be injected from deployment environment or GitHub Actions
-        API_SECRET_KEY: !Ref ApiSecretKey
-        GEMINI_API_KEY: !Ref GeminiApiKey
-        # OPENAI_API_KEY: !Ref OpenaiApiKey
-        CLOUDFLARE_DATABASE_ID: !Ref CloudflareDatabaseId
-        CLOUDFLARE_ACCOUNT_ID: !Ref CloudflareAccountId
-        CLOUDFLARE_API_TOKEN: !Ref CloudflareApiToken
+        API_SECRET_KEY: !Ref API_SECRET_KEY
+        GEMINI_API_KEY: !Ref GEMINI_API_KEY
+        # OPENAI_API_KEY: !Ref OPENAI_API_KEY
+        CLOUDFLARE_DATABASE_ID: !Ref CLOUDFLARE_DATABASE_ID
+        CLOUDFLARE_ACCOUNT_ID: !Ref CLOUDFLARE_ACCOUNT_ID
+        CLOUDFLARE_API_TOKEN: !Ref CLOUDFLARE_API_TOKEN
 
 Parameters:
   ApiSecretKey:
