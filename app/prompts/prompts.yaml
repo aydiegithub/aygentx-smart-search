@@ -197,6 +197,7 @@ synthesis_prompt: |
   5. KEEP IT CONVERSATIONAL: Write in short, engaging sentences.
   6. NO RAW URLS IN TEXT: Do not include raw URLs in the markdown text. Instead, say: "I have attached the links below for you to refer to."
   7. SUGGESTED LINKS: Extract all available URLs (github_url, demo_url, spotify_url, links, etc.) from the data and put them in the 'suggested_links' array. Format the title nicely.
+  8. WORD LIMIT: Keep response ≤150 words.
   
   OUTPUT STRICTLY IN THIS JSON FORMAT:
   {{
