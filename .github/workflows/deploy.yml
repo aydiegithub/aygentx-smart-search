@@ -42,6 +42,13 @@ jobs:
         run: sam build --use-container
 
       - name: SAM Deploy
+        env:
+          API_SECRET_KEY: ${{ secrets.API_SECRET_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          CLOUDFLARE_DATABASE_ID: ${{ secrets.CLOUDFLARE_DATABASE_ID }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           sam deploy \
             --no-confirm-changeset \
@@ -50,9 +57,9 @@ jobs:
             --resolve-s3 \
             --capabilities CAPABILITY_IAM \
             --parameter-overrides \
-                ApiSecretKey="${{ secrets.API_SECRET_KEY }}" \
-                GeminiApiKey="${{ secrets.GEMINI_API_KEY }}" \
-                OpenaiApiKey="${{ secrets.OPENAI_API_KEY }}" \
-                CloudflareDatabaseId="${{ secrets.CLOUDFLARE_DATABASE_ID }}" \
-                CloudflareAccountId="${{ secrets.CLOUDFLARE_ACCOUNT_ID }}" \
-                CloudflareApiToken="${{ secrets.CLOUDFLARE_API_TOKEN }}"
+                ApiSecretKey="${API_SECRET_KEY:-NotSet}" \
+                GeminiApiKey="${GEMINI_API_KEY:-NotSet}" \
+                OpenaiApiKey="${OPENAI_API_KEY:-NotSet}" \
+                CloudflareDatabaseId="${CLOUDFLARE_DATABASE_ID:-NotSet}" \
+                CloudflareAccountId="${CLOUDFLARE_ACCOUNT_ID:-NotSet}" \
+                CloudflareApiToken="${CLOUDFLARE_API_TOKEN:-NotSet}"
