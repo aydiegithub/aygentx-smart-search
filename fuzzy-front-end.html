@@ -448,6 +448,56 @@
             background: #3F3F46;
             color: #FFF;
         }
+
+        /* Project Cards */
+        .project-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 16px;
+            width: 100%;
+        }
+
+        .project-card {
+            background: white;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 16px;
+            width: 100%;
+            max-width: 320px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            color: var(--text-primary);
+        }
+
+        .project-card.featured {
+            border-color: #8B5CF6;
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+            animation: glowing 2s infinite alternate ease-in-out;
+        }
+
+        @keyframes glowing {
+            0% {
+                box-shadow: 0 0 5px rgba(139, 92, 246, 0.3);
+            }
+
+            100% {
+                box-shadow: 0 0 20px rgba(139, 92, 246, 0.8), inset 0 0 10px rgba(139, 92, 246, 0.2);
+            }
+        }
+
+        .project-card-title {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .project-card-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
     </style>
 </head>
 
@@ -651,7 +701,47 @@
                 }
 
                 const responseText = data.ai_response || data.message || "[No text returned]";
-                appendMessage('bot', responseText, true);
+                const msgDiv = appendMessage('bot', responseText, true);
+
+                // Setup cards for structured data if present
+                if (data.data && Array.isArray(data.data) && data.data.length > 0) {
+                    const cardsContainer = document.createElement('div');
+                    cardsContainer.className = 'project-cards';
+
+                    data.data.forEach(item => {
+                        const status = (item.status || 'Published').toLowerCase();
+
+                        // If draft don't display
+                        if (status === 'draft') return;
+
+                        const card = document.createElement('div');
+                        card.className = 'project-card';
+
+                        if (status === 'featured') {
+                            card.classList.add('featured');
+                        }
+
+                        const title = document.createElement('div');
+                        title.className = 'project-card-title';
+                        title.textContent = item.title || item.name || 'Untitled';
+
+                        const desc = document.createElement('div');
+                        desc.className = 'project-card-desc';
+                        desc.textContent = item.description || item.abstract || item.content || '';
+
+                        card.appendChild(title);
+                        card.appendChild(desc);
+                        cardsContainer.appendChild(card);
+                    });
+
+                    if (cardsContainer.children.length > 0) {
+                        const botContent = msgDiv.querySelector('.msg-content');
+                        if (botContent) {
+                            botContent.appendChild(cardsContainer);
+                        }
+                        chatArea.scrollTop = chatArea.scrollHeight;
+                    }
+                }
 
                 // Show full JSON payload in the right panel
                 updateJSONPanel(data);
