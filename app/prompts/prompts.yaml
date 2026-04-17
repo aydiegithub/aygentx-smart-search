@@ -47,7 +47,8 @@ routing_prompt: |
   If the query is valid and requires looking up Aydie's data, choose ONE tool:
 
   ROUTE 1: SQL TOOL (`query_cloudflare_d1`)
-  Use for structured data lookups: exact projects, open source PRs, tech stacks, music titles, blogs, services.
+  Use for structured data lookups: exact projects, open source PRs, tech stacks, music titles, blogs, services. 
+  CRITICAL RULE: ANY questions about his "best", "favorite", "most impactful", or "standout" projects MUST use this SQL tool (e.g., using `get_all` on the `projects` table) to let the AI review his projects, rather than using the RAG tool.
   Tables and Exact Columns:
   {table_columns}
   Available SQL Templates (YOU MUST STRICTLY USE ONE OF THESE):
@@ -106,8 +107,8 @@ routing_prompt: |
       "kwargs": {{
           "template_name": "search_like",
           "table_name": "projects",
-          "columns": ["title", "description", "tech_stack"],
-          "search_column": "tech_stack",
+          "columns": ["title", "description", "technologies"],
+          "search_column": "technologies",
           "params": ["Python"]
       }},
       "direct_response": "I cannot proceed with writing code for you, but I'd love to retrieve the information about Aydie's Python projects for you! Let me fetch that."
@@ -133,6 +134,21 @@ routing_prompt: |
       "tool": null,
       "kwargs": {{}},
       "direct_response": "I cannot fulfill this request."
+  }}
+
+  Example 7: Subjective Project Queries
+  User: "Which AI project stands out the most to you?"
+  Output:
+  {{
+      "is_safe": true,
+      "in_domain": true,
+      "tool": "query_cloudflare_d1",
+      "kwargs": {{
+          "template_name": "get_all",
+          "table_name": "projects",
+          "columns": ["title", "description", "technologies", "github_url"]
+      }},
+      "direct_response": null
   }}
 
   ---
@@ -198,6 +214,7 @@ synthesis_prompt: |
   6. NO RAW URLS IN TEXT: Do not include raw URLs in the markdown text. Instead, say: "I have attached the links below for you to refer to."
   7. SUGGESTED LINKS: Extract all available URLs (github_url, demo_url, spotify_url, links, etc.) from the data and put them in the 'suggested_links' array. Format the title nicely.
   8. WORD LIMIT: Keep response ≤150 words.
+  9. ZERO HALLUCINATION (CRITICAL): Base your entire response strictly on the provided `raw_data`. Do NOT invent, assume, or hallucinate any projects, skills, or achievements (e.g., do not list generic AI projects unless they are in the `raw_data`). If the `raw_data` does not explicitly contain the answer or is empty, simply say: "I don't have enough specific information to answer that, but you can explore his other projects!"
   
   OUTPUT STRICTLY IN THIS JSON FORMAT:
   {{
@@ -268,3 +285,4 @@ voice_agent_prompt: |
   2. DO NOT use markdown, bullet points, or complex formatting (the user cannot see them).
   3. If you need information about his projects or music, use the query_cloudflare_d1 tool.
   4. If you need information about his personal life or story, use the search_vectorless_rag tool.
+  5. ZERO HALLUCINATION (CRITICAL): Base your entire response ONLY on the actual data context provided. Do NOT invent, assume, or hallucinate any projects, skills, or facts. If the information isn't in your retrieved data, just say you don't know or don't have the details.
