@@ -87,9 +87,10 @@ class RagService:
         # 5. INSERT TREE INTO DATABASE
         branches_count = 0
         leaves_count = 0
+        nodes_to_insert = []
 
-        # Recursive function to insert nodes and their children
-        def insert_node(node: dict, parent_id: str = None):
+        # Recursive function to collect nodes and their children
+        def collect_nodes(node: dict, parent_id: str = None):
             nonlocal branches_count, leaves_count
 
             node_id = node.get("id", f"node_{uuid.uuid4().hex[:8]}")
@@ -101,19 +102,34 @@ class RagService:
             else:
                 branches_count += 1
 
-            # Insert this specific node
-            self.db.query(
-                "INSERT INTO rag_nodes (id, parent_id, title, content) VALUES (?, ?, ?, ?)",
-                [node_id, parent_id, title, node_content]
-            )
+            # Prepare the SQL and params for this node
+            nodes_to_insert.append({
+                "sql": "INSERT INTO rag_nodes (id, parent_id, title, content) VALUES (?, ?, ?, ?)",
+                "params": [node_id, parent_id, title, node_content]
+            })
 
-            # Recursively process and insert all children
+            # Recursively process and collect all children
             for child in node.get("children", []):
-                insert_node(child, node_id)
+                collect_nodes(child, node_id)
 
-        # Kick off the recursive insertion
+        # Kick off the recursive collection
         for root_node in tree_data:
-            insert_node(root_node, None)
+            collect_nodes(root_node, None)
+
+        if nodes_to_insert:
+            logging.info(f"Inserting {len(nodes_to_insert)} nodes into D1...")
+            # D1 REST API limit on bound parameters is 100 per query. 
+            # Each node has 4 parameters. 20 nodes = 80 parameters (safe).
+            chunk_size = 20
+            for i in range(0, len(nodes_to_insert), chunk_size):
+                chunk = nodes_to_insert[i:i + chunk_size]
+                placeholders = ["(?, ?, ?, ?)" for _ in chunk]
+                sql = f"INSERT INTO rag_nodes (id, parent_id, title, content) VALUES {', '.join(placeholders)}"
+                params = []
+                for node in chunk:
+                    params.extend(node["params"])
+
+                self.db.query(sql, params)
 
         logging.info(
             f"Tree generation complete. Branches: {branches_count}, Leaves: {leaves_count}")

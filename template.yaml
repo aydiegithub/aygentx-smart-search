@@ -6,8 +6,8 @@ Description: >
 
 Globals:
   Function:
-    Timeout: 30
-    MemorySize: 512
+    Timeout: 300
+    MemorySize: 1024
     Runtime: python3.12
     Architectures:
       - x86_64

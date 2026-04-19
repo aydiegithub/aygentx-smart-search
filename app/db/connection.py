@@ -29,32 +29,34 @@ class D1Connection:
         }
 
     def query(self, sql: str, params: Optional[List[Any]] = None) -> List[Dict[str, Any]]:
-        logger.info(f"Entered query of D1Connection with sql={sql}, params={params}")
-        logger.info(
-            f"Entered query of D1Connection with sql={sql}, params={params}")
+        logger.info(f"Entered query of D1Connection")
         """
         Execute SQL Query
         """
-        logger.info(
-            f"Entered query of D1Connection with sql={sql}, params={params}")
         payload = {
             "sql": sql,
             "params": params or []
         }
 
-        response = requests.post(
-            self.base_url,
-            headers=self.headers,
-            json=payload)
-        response.raise_for_status()
-
-        data = response.json()
-
-        if not data.get("success"):
-            errors = data.get("errors", [])
-            logging.error(f"D1 Query failed: {errors}")
-
         try:
+            response = requests.post(
+                self.base_url,
+                headers=self.headers,
+                json=payload)
+            
+            if response.status_code != 200:
+                logging.error(f"D1 API Error ({response.status_code}): {response.text}")
+                response.raise_for_status()
+
+            data = response.json()
+
+            if not data.get("success"):
+                errors = data.get("errors", [])
+                logging.error(f"D1 Query failed: {errors}")
+                return []
+
+            # D1 returns an array of result objects
             return data["result"][0].get("results", [])
-        except (KeyError, IndexError) as e:
-            logging.error(f"Caught error in D1Connection {e}")
+        except Exception as e:
+            logging.error(f"Caught error in D1Connection query: {e}")
+            return []
