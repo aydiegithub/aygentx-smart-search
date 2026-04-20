@@ -53,6 +53,15 @@ Resources:
     Properties:
       CodeUri: .
       Handler: main.handler
+      FunctionUrlConfig:
+        AuthType: NONE
+        Cors:
+          AllowOrigins:
+            - "*"
+          AllowMethods:
+            - "*"
+          AllowHeaders:
+            - "*"
       Events:
         AygentXApi:
           Type: Api
@@ -69,6 +78,9 @@ Outputs:
   AygentXApiEndpoint:
     Description: "API Gateway endpoint URL for Prod stage"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  AygentXFunctionUrl:
+    Description: "Lambda Function URL (Bypasses 29s timeout)"
+    Value: !GetAtt AygentXFunctionUrl.FunctionUrl
   AygentXFunctionArn:
     Description: "Lambda Function ARN"
     Value: !GetAtt AygentXFunction.Arn
