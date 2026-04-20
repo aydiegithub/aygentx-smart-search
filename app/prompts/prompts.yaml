@@ -231,23 +231,24 @@ rag_ingestion_prompt: |
   Your task is to read the massive text below, understand the core themes of his life/career, and organize it into a Hierarchical JSON Tree.
   
   RULES:
-  1. Create main branches (e.g., "Personal Experience", "Music Career", "Tech Journey").
+  1. Create main branches (e.g., "Professional Experience", "Personal Experience", "Music Career", "Tech Journey").
   2. Create sub-branches (leaf nodes) under the main branches.
   3. ONLY the leaf nodes should contain the actual extracted `content`. Parent branches should have `content: null`.
-  4. Ensure ALL details from the raw text are mapped to a relevant leaf node. Do not lose any information.
-  5. Use snake_case for IDs (e.g., "music_career", "stage_name_history").
+  4. CRITICAL: NEVER summarize or generalize specific details. You MUST explicitly retain all company names, exact role titles, specific dates, organizations, tool names, and precise detailed descriptions of work performed. Do not abbreviate or generalize his experiences.
+  5. Ensure ALL details from the raw text are mapped to a relevant leaf node. Do not lose any information.
+  6. Use snake_case for IDs (e.g., "music_career", "stage_name_history", "company_name_role").
   
   OUTPUT STRICTLY IN THIS JSON FORMAT:
   [
     {{
-      "id": "personal_experience",
-      "title": "Personal Experience",
+      "id": "professional_experience",
+      "title": "Professional Experience",
       "content": null,
       "children": [
         {{
-          "id": "childhood",
-          "title": "Childhood",
-          "content": "Adithya grew up in...",
+          "id": "company_name_role",
+          "title": "Role at [Company Name]",
+          "content": "Adithya worked at [Company Name] as a [Role] from [Date] to [Date]. His specific achievements included...",
           "children": []
         }}
       ]
