@@ -141,10 +141,23 @@ def search_vectorless_rag(query: str) -> str:
     data = db.query(
         "SELECT title, content FROM rag_nodes WHERE id = ?", [selection_id])
 
-    # Fallback: If it picked a parent branch instead of a leaf, grab all its children's content
+    # Fallback: If it picked a parent branch instead of a leaf, grab all its children's (and descendants') content
     if data and not data[0].get("content"):
         child_data = db.query(
-            "SELECT title, content FROM rag_nodes WHERE parent_id = ? AND content IS NOT NULL", [selection_id])
+            """
+            WITH RECURSIVE descendant_nodes(id, parent_id, full_title, content) AS (
+                SELECT id, parent_id, title AS full_title, content 
+                FROM rag_nodes 
+                WHERE parent_id = ?
+                UNION ALL
+                SELECT rn.id, rn.parent_id, dn.full_title || ' > ' || rn.title, rn.content 
+                FROM rag_nodes rn
+                JOIN descendant_nodes dn ON rn.parent_id = dn.id
+            )
+            SELECT full_title AS title, content FROM descendant_nodes WHERE content IS NOT NULL
+            """, 
+            [selection_id]
+        )
 
         if child_data:
             data = child_data
